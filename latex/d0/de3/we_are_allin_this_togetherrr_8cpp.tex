@@ -1,0 +1,610 @@
+\doxysection{src/we\+Are\+Allin\+This\+Togetherrr.cpp File Reference}
+\label{we_are_allin_this_togetherrr_8cpp}\index{src/weAreAllinThisTogetherrr.cpp@{src/weAreAllinThisTogetherrr.cpp}}
+{\ttfamily \#include $<$Arduino.\+h$>$}\newline
+{\ttfamily \#include $<$Sgp4.\+h$>$}\newline
+{\ttfamily \#include $<$Wire.\+h$>$}\newline
+{\ttfamily \#include "{}GPS\+\_\+\+Air530\+Z.\+h"{}}\newline
+{\ttfamily \#include $<$Radio\+Lib.\+h$>$}\newline
+{\ttfamily \#include $<$Radio\+Boards.\+h$>$}\newline
+\doxysubsubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \textbf{ RADIO\+\_\+\+BOARD\+\_\+\+AUTO}
+\item 
+\#define \textbf{ RS485\+\_\+\+DIR\+\_\+\+PIN}~-\/1
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \textbf{ frac\+Part} (double val, int n)
+\begin{DoxyCompactList}\small\item\em \doxyref{frac\+Part()}{p.}{d0/de3/we_are_allin_this_togetherrr_8cpp_a5f24eeb29eb47159fd29e3ca97411b00_a5f24eeb29eb47159fd29e3ca97411b00} is a function to get a number\textquotesingle{}s fractional part up to n decimal places. \end{DoxyCompactList}\item 
+void \textbf{ set\+Flag} (void)
+\item 
+void \textbf{ Predict} (int many)
+\item 
+void \textbf{ setup} ()
+\item 
+void \textbf{ loop} ()
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+Radio \textbf{ radio} = new Radio\+Module()
+\item 
+char \textbf{ satname} [$\,$] = "{}0 LANDSAT 9"{}
+\item 
+char \textbf{ tle\+\_\+line1} [$\,$] = "{}1 49260U 21088A 25287.\+90967571 .\+00000608 00000-\/0 14510-\/3 0 9996"{}
+\begin{DoxyCompactList}\small\item\em Copy and paste Line one from the TLE data. \end{DoxyCompactList}\item 
+char \textbf{ tle\+\_\+line2} [$\,$] = "{}2 49260 98.\+2160 356.\+8519 0001329 88.\+4277 271.\+7074 14.\+57108878215282"{}
+\begin{DoxyCompactList}\small\item\em Line two from the TLE data. \end{DoxyCompactList}\item 
+Air530\+ZClass \textbf{ GPS}
+\item 
+float \textbf{ current\+Freq} = 923.\+0
+\item 
+int \textbf{ transmission\+State} = RADIOLIB\+\_\+\+ERR\+\_\+\+NONE
+\item 
+uint8\+\_\+t \textbf{ lrfhss\+Sync\+Word} [4] = \{0x2C, 0x0F, 0x79, 0x95\}
+\begin{DoxyCompactList}\small\item\em Change syncword like you change password for different websites -\/ TH. \end{DoxyCompactList}\item 
+bool \textbf{ transmit\+Flag} = false
+\begin{DoxyCompactList}\small\item\em flag to indicate transmission or reception state. It is advisable to not change this variable directly outside the interrupt context. \end{DoxyCompactList}\item 
+volatile bool \textbf{ operation\+Done} = false
+\begin{DoxyCompactList}\small\item\em flag to indicate that a packet was sent or received. It is adivisable not to tamper with thie boolean as it is needed for radio interfaces. \end{DoxyCompactList}\item 
+volatile bool \textbf{ received\+Flag} = false
+\begin{DoxyCompactList}\small\item\em flag to indicate that a packet was received. Also do not tamper. \end{DoxyCompactList}\item 
+Sgp4 \textbf{ sat}
+\item 
+int \textbf{ timezone} = 7
+\begin{DoxyCompactList}\small\item\em Timezone is off by 1 hour from actual input time because SGP4 library is faster by 1 hour from UTC time for some reason. \end{DoxyCompactList}\item 
+int \textbf{ year}
+\item 
+int \textbf{ mon}
+\item 
+int \textbf{ day}
+\item 
+int \textbf{ hr}
+\item 
+int \textbf{ minute}
+\item 
+double \textbf{ sec}
+\item 
+unsigned long \textbf{ unixtime} = 1760486400
+\begin{DoxyCompactList}\small\item\em \doxyref{Predict()}{p.}{d0/de3/we_are_allin_this_togetherrr_8cpp_af56b9618b13afcb230938d55a2f37e59_af56b9618b13afcb230938d55a2f37e59} function returns predicted times for overpasses of satellite from TLE in the timezone set. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\label{doc-define-members}
+\doxysubsection{Macro Definition Documentation}
+\index{weAreAllinThisTogetherrr.cpp@{weAreAllinThisTogetherrr.cpp}!RADIO\_BOARD\_AUTO@{RADIO\_BOARD\_AUTO}}
+\index{RADIO\_BOARD\_AUTO@{RADIO\_BOARD\_AUTO}!weAreAllinThisTogetherrr.cpp@{weAreAllinThisTogetherrr.cpp}}
+\doxysubsubsection{RADIO\_BOARD\_AUTO}
+{\footnotesize\ttfamily \label{we_are_allin_this_togetherrr_8cpp_a287812da12573711bf0628eef5cb4768_a287812da12573711bf0628eef5cb4768} 
+\#define RADIO\+\_\+\+BOARD\+\_\+\+AUTO}
+
+
+
+Definition at line \textbf{ 8} of file \textbf{ we\+Are\+Allin\+This\+Togetherrr.\+cpp}.
+
+\index{weAreAllinThisTogetherrr.cpp@{weAreAllinThisTogetherrr.cpp}!RS485\_DIR\_PIN@{RS485\_DIR\_PIN}}
+\index{RS485\_DIR\_PIN@{RS485\_DIR\_PIN}!weAreAllinThisTogetherrr.cpp@{weAreAllinThisTogetherrr.cpp}}
+\doxysubsubsection{RS485\_DIR\_PIN}
+{\footnotesize\ttfamily \label{we_are_allin_this_togetherrr_8cpp_a0c3dd11efc19d493e0776ae590a342fd_a0c3dd11efc19d493e0776ae590a342fd} 
+\#define RS485\+\_\+\+DIR\+\_\+\+PIN~-\/1}
+
+
+
+Definition at line \textbf{ 12} of file \textbf{ we\+Are\+Allin\+This\+Togetherrr.\+cpp}.
+
+
+
+\label{doc-func-members}
+\doxysubsection{Function Documentation}
+\index{weAreAllinThisTogetherrr.cpp@{weAreAllinThisTogetherrr.cpp}!fracPart@{fracPart}}
+\index{fracPart@{fracPart}!weAreAllinThisTogetherrr.cpp@{weAreAllinThisTogetherrr.cpp}}
+\doxysubsubsection{fracPart()}
+{\footnotesize\ttfamily \label{we_are_allin_this_togetherrr_8cpp_a5f24eeb29eb47159fd29e3ca97411b00_a5f24eeb29eb47159fd29e3ca97411b00} 
+int frac\+Part (\begin{DoxyParamCaption}\item[{double}]{val}{, }\item[{int}]{n}{}\end{DoxyParamCaption})}
+
+
+
+\doxyref{frac\+Part()}{p.}{d0/de3/we_are_allin_this_togetherrr_8cpp_a5f24eeb29eb47159fd29e3ca97411b00_a5f24eeb29eb47159fd29e3ca97411b00} is a function to get a number\textquotesingle{}s fractional part up to n decimal places. 
+
+\doxyref{frac\+Part()}{p.}{d0/de3/we_are_allin_this_togetherrr_8cpp_a5f24eeb29eb47159fd29e3ca97411b00_a5f24eeb29eb47159fd29e3ca97411b00} requires two inputs, first input is the variable you would like to get the fractional part from, and the second input is the number of decimal places you desire. 
+
+Definition at line \textbf{ 37} of file \textbf{ we\+Are\+Allin\+This\+Togetherrr.\+cpp}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00038\ \{}
+\DoxyCodeLine{00039\ \ \ \textcolor{keywordflow}{return}\ (\textcolor{keywordtype}{int})((val\ -\/\ (int)(val))*pow(10,n));}
+\DoxyCodeLine{00040\ \}}
+
+\end{DoxyCode}
+\index{weAreAllinThisTogetherrr.cpp@{weAreAllinThisTogetherrr.cpp}!loop@{loop}}
+\index{loop@{loop}!weAreAllinThisTogetherrr.cpp@{weAreAllinThisTogetherrr.cpp}}
+\doxysubsubsection{loop()}
+{\footnotesize\ttfamily \label{we_are_allin_this_togetherrr_8cpp_afe461d27b9c48d5921c00d521181f12f_afe461d27b9c48d5921c00d521181f12f} 
+void loop (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Definition at line \textbf{ 149} of file \textbf{ we\+Are\+Allin\+This\+Togetherrr.\+cpp}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00149\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00150\ \ \ \textcolor{keywordtype}{double}\ jdC\ =\ sat.satrec.jdsatepoch;}
+\DoxyCodeLine{00151\ \ \ invjday(jdC\ ,\ timezone,\ \textcolor{keyword}{true},\ year,\ mon,\ day,\ hr,\ minute,\ sec);}
+\DoxyCodeLine{00152\ \ \ Serial.println(\textcolor{stringliteral}{"{}Epoch:\ "{}}\ +\ String(day)\ +\ \textcolor{charliteral}{'/'}\ +\ String(mon)\ +\ \textcolor{charliteral}{'/'}\ +\ String(year)\ +\ \textcolor{charliteral}{'\ '}\ +\ String(hr)\ +\ \textcolor{charliteral}{':'}\ +\ String(minute)\ +\ \textcolor{charliteral}{':'}\ +\ String(sec));}
+\DoxyCodeLine{00153\ \ \ Serial.println();}
+\DoxyCodeLine{00154\ }
+\DoxyCodeLine{00155\ \ \ Predict(5);}
+\DoxyCodeLine{00156\ \ \ delay(1000);}
+\DoxyCodeLine{00157\ }
+\DoxyCodeLine{00158\ \}}
+
+\end{DoxyCode}
+
+
+References \textbf{ day}, \textbf{ hr}, \textbf{ minute}, \textbf{ mon}, \textbf{ Predict()}, \textbf{ sec}, \textbf{ timezone}, and \textbf{ year}.
+
+\index{weAreAllinThisTogetherrr.cpp@{weAreAllinThisTogetherrr.cpp}!Predict@{Predict}}
+\index{Predict@{Predict}!weAreAllinThisTogetherrr.cpp@{weAreAllinThisTogetherrr.cpp}}
+\doxysubsubsection{Predict()}
+{\footnotesize\ttfamily \label{we_are_allin_this_togetherrr_8cpp_af56b9618b13afcb230938d55a2f37e59_af56b9618b13afcb230938d55a2f37e59} 
+void Predict (\begin{DoxyParamCaption}\item[{int}]{many}{}\end{DoxyParamCaption})}
+
+$<$ Structure to store overpass info
+
+$<$ Finds the startpoint, minimum elevation is also set hereset here but I have recalibrated it to 10º below
+
+Definition at line \textbf{ 64} of file \textbf{ we\+Are\+Allin\+This\+Togetherrr.\+cpp}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00065\ \ \ \ \ }
+\DoxyCodeLine{00066\ \ \ \ \ passinfo\ overpass;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00067\ \ \ \ \ sat.initpredpoint(unixtime,\ 10);\ \ \ \ \ }
+\DoxyCodeLine{00068\ \ \ \ \ }
+\DoxyCodeLine{00069\ \ \ \ \ \textcolor{keywordtype}{bool}\ error;}
+\DoxyCodeLine{00070\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{long}\ start\ =\ millis();}
+\DoxyCodeLine{00071\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i<many\ ;\ i++)\{}
+\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ error\ =\ sat.nextpass(\&overpass,20,\ \textcolor{keyword}{false});\ \ \ \ \ \textcolor{comment}{//search\ for\ the\ next\ overpass,\ if\ there\ are\ more\ than\ 20\ maximums\ below\ the\ horizon\ it\ returns\ false}}
+\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ delay(0);}
+\DoxyCodeLine{00074\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00075\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\ error\ ==\ 1)\{\ \textcolor{comment}{//no\ error,\ prints\ overpass\ information}}
+\DoxyCodeLine{00076\ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ \ \ invjday(overpass.jdstart\ ,timezone\ ,\textcolor{keyword}{true}\ ,\ year,\ mon,\ day,\ hr,\ minute,\ sec);}
+\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ \ \ Serial.println(\textcolor{stringliteral}{"{}Overpass\ "{}}\ +\ String(day)\ +\ \textcolor{charliteral}{'\ '}\ +\ String(mon)\ +\ \textcolor{charliteral}{'\ '}\ +\ String(year));}
+\DoxyCodeLine{00079\ \ \ \ \ \ \ \ \ \ \ Serial.println(\textcolor{stringliteral}{"{}\ \ Start:\ az="{}}\ +\ String(overpass.azstart)\ +\ \textcolor{stringliteral}{"{}°\ "{}}\ +\ String(hr)\ +\ \textcolor{charliteral}{':'}\ +\ String(minute)\ +\ \textcolor{charliteral}{':'}\ +\ String(sec));}
+\DoxyCodeLine{00080\ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00081\ \ \ \ \ \ \ \ \ \ \ invjday(overpass.jdmax\ ,timezone\ ,\textcolor{keyword}{true}\ ,\ year,\ mon,\ day,\ hr,\ minute,\ sec);}
+\DoxyCodeLine{00082\ \ \ \ \ \ \ \ \ \ \ Serial.println(\textcolor{stringliteral}{"{}\ \ Max:\ elev="{}}\ +\ String(overpass.maxelevation)\ +\ \textcolor{stringliteral}{"{}°\ "{}}\ +\ String(hr)\ +\ \textcolor{charliteral}{':'}\ +\ String(minute)\ +\ \textcolor{charliteral}{':'}\ +\ String(sec));}
+\DoxyCodeLine{00083\ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00084\ \ \ \ \ \ \ \ \ \ \ invjday(overpass.jdstop\ ,timezone\ ,\textcolor{keyword}{true}\ ,\ year,\ mon,\ day,\ hr,\ minute,\ sec);}
+\DoxyCodeLine{00085\ \ \ \ \ \ \ \ \ \ \ Serial.println(\textcolor{stringliteral}{"{}\ \ Stop:\ az="{}}\ +\ String(overpass.azstop)\ +\ \textcolor{stringliteral}{"{}°\ "{}}\ +\ String(hr)\ +\ \textcolor{charliteral}{':'}\ +\ String(minute)\ +\ \textcolor{charliteral}{':'}\ +\ String(sec));}
+\DoxyCodeLine{00086\ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00087\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{switch}(overpass.transit)\{}
+\DoxyCodeLine{00088\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ none:}
+\DoxyCodeLine{00089\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00090\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ enter:}
+\DoxyCodeLine{00091\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ invjday(overpass.jdtransit\ ,timezone\ ,\textcolor{keyword}{true}\ ,\ year,\ mon,\ day,\ hr,\ minute,\ sec);}
+\DoxyCodeLine{00092\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Serial.println(\textcolor{stringliteral}{"{}\ \ Enter\ earth\ shadow:\ "{}}\ +\ String(hr)\ +\ \textcolor{charliteral}{':'}\ +\ String(minute)\ +\ \textcolor{charliteral}{':'}\ +\ String(sec));\ }
+\DoxyCodeLine{00093\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00094\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ leave:}
+\DoxyCodeLine{00095\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ invjday(overpass.jdtransit\ ,timezone\ ,\textcolor{keyword}{true}\ ,\ year,\ mon,\ day,\ hr,\ minute,\ sec);}
+\DoxyCodeLine{00096\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Serial.println(\textcolor{stringliteral}{"{}\ \ Leave\ earth\ shadow:\ "{}}\ +\ String(hr)\ +\ \textcolor{charliteral}{':'}\ +\ String(minute)\ +\ \textcolor{charliteral}{':'}\ +\ String(sec));\ }
+\DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00098\ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00099\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{switch}(overpass.sight)\{}
+\DoxyCodeLine{00100\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ lighted:}
+\DoxyCodeLine{00101\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Serial.println(\textcolor{stringliteral}{"{}\ \ Visible"{}});}
+\DoxyCodeLine{00102\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00103\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ eclipsed:}
+\DoxyCodeLine{00104\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Serial.println(\textcolor{stringliteral}{"{}\ \ Not\ visible"{}});}
+\DoxyCodeLine{00105\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00106\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ daylight:}
+\DoxyCodeLine{00107\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Serial.println(\textcolor{stringliteral}{"{}\ \ Daylight"{}});}
+\DoxyCodeLine{00108\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00109\ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00110\ \ \ }
+\DoxyCodeLine{00111\ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00112\ \ \ \ \ \ \ \ \ \}\textcolor{keywordflow}{else}\{}
+\DoxyCodeLine{00113\ \ \ \ \ \ \ \ \ \ \ \ \ Serial.println(\textcolor{stringliteral}{"{}Prediction\ error"{}});}
+\DoxyCodeLine{00114\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00115\ \ \ \ \ \ \ \ \ delay(0);}
+\DoxyCodeLine{00116\ \ \ \ \ \}}
+\DoxyCodeLine{00117\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{long}\ einde\ =\ millis();}
+\DoxyCodeLine{00118\ \ \ \ \ Serial.println(\textcolor{stringliteral}{"{}Time:\ "{}}\ +\ String(einde-\/start)\ +\ \textcolor{stringliteral}{"{}\ milliseconds"{}});}
+\DoxyCodeLine{00119\ \ \ \ \ }
+\DoxyCodeLine{00120\ \}}
+
+\end{DoxyCode}
+
+
+References \textbf{ day}, \textbf{ hr}, \textbf{ minute}, \textbf{ mon}, \textbf{ sat}, \textbf{ sec}, \textbf{ timezone}, \textbf{ unixtime}, and \textbf{ year}.
+
+
+
+Referenced by \textbf{ loop()}.
+
+\index{weAreAllinThisTogetherrr.cpp@{weAreAllinThisTogetherrr.cpp}!setFlag@{setFlag}}
+\index{setFlag@{setFlag}!weAreAllinThisTogetherrr.cpp@{weAreAllinThisTogetherrr.cpp}}
+\doxysubsubsection{setFlag()}
+{\footnotesize\ttfamily \label{we_are_allin_this_togetherrr_8cpp_a4949bc2533dea211ffee4479c9ea246e_a4949bc2533dea211ffee4479c9ea246e} 
+void set\+Flag (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})}
+
+when sent or received a packet, set the flag
+
+Definition at line \textbf{ 44} of file \textbf{ we\+Are\+Allin\+This\+Togetherrr.\+cpp}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00046\ \ \ operationDone\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00047\ \ \ receivedFlag\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00048\ \}}
+
+\end{DoxyCode}
+
+
+References \textbf{ operation\+Done}, and \textbf{ received\+Flag}.
+
+
+
+Referenced by \textbf{ setup()}.
+
+\index{weAreAllinThisTogetherrr.cpp@{weAreAllinThisTogetherrr.cpp}!setup@{setup}}
+\index{setup@{setup}!weAreAllinThisTogetherrr.cpp@{weAreAllinThisTogetherrr.cpp}}
+\doxysubsubsection{setup()}
+{\footnotesize\ttfamily \label{we_are_allin_this_togetherrr_8cpp_a4fc01d736fe50cf5b977f755b675f11d_a4fc01d736fe50cf5b977f755b675f11d} 
+void setup (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+$<$ Modbus serial line set here (pins vary by board)
+
+$<$ set site latitude[°], longitude[°] and altitude[m], TODO\+: change with gps coords on air530z
+
+set\+Packet\+Received\+Action() Sets the function that will be called. when a new packet is received. Here, it sets the operation\+Done and transmission flags to true and indicates that a packet has been received.
+
+Definition at line \textbf{ 123} of file \textbf{ we\+Are\+Allin\+This\+Togetherrr.\+cpp}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00123\ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00124\ \ \ Serial.begin(115200);}
+\DoxyCodeLine{00125\ \ \ Serial1.begin(9600,\ SERIAL\_8N1);\ \ }
+\DoxyCodeLine{00126\ \ \ Serial.println(\textcolor{stringliteral}{"{}Here\ we\ go"{}});}
+\DoxyCodeLine{00127\ }
+\DoxyCodeLine{00128\ \ \ GPS.begin();}
+\DoxyCodeLine{00129\ }
+\DoxyCodeLine{00130\ \ \ sat.site(60.4720,\ 8.4689,\ 34);\ }
+\DoxyCodeLine{00131\ \ \ sat.init(satname,tle\_line1,tle\_line2);}
+\DoxyCodeLine{00132\ }
+\DoxyCodeLine{00133\ \ \ \textcolor{keywordtype}{int}\ state\ =\ radio.begin(currentFreq,\ 250.0,\ 12,7,\ RADIOLIB\_SX126X\_SYNC\_WORD\_PRIVATE,\ 20);}
+\DoxyCodeLine{00134\ \ \ radio.setFrequency(currentFreq);}
+\DoxyCodeLine{00135\ \ \ radio.setCurrentLimit(140);}
+\DoxyCodeLine{00136\ \ \ }
+\DoxyCodeLine{00138\ \ \ radio.setPacketReceivedAction(setFlag);}
+\DoxyCodeLine{00139\ \ \ \ \ }
+\DoxyCodeLine{00140\ }
+\DoxyCodeLine{00141\ \ \ \textcolor{keywordflow}{if}\ (RS485\_DIR\_PIN\ >=\ 0)\ \{}
+\DoxyCodeLine{00142\ \ \ \ \ pinMode(RS485\_DIR\_PIN,\ OUTPUT);}
+\DoxyCodeLine{00143\ \ \ \ \ digitalWrite(RS485\_DIR\_PIN,\ LOW);\ \ \textcolor{comment}{//\ Receive\ mode}}
+\DoxyCodeLine{00144\ \ \ \}}
+\DoxyCodeLine{00145\ \ \ }
+\DoxyCodeLine{00146\ \ \ Serial.println(\textcolor{stringliteral}{"{}Modbus\ RTU\ Reader\ (Serial1)\ Begins"{}});}
+\DoxyCodeLine{00147\ \}}
+
+\end{DoxyCode}
+
+
+References \textbf{ current\+Freq}, \textbf{ GPS}, \textbf{ radio}, \textbf{ sat}, \textbf{ satname}, \textbf{ set\+Flag()}, \textbf{ tle\+\_\+line1}, and \textbf{ tle\+\_\+line2}.
+
+
+
+\label{doc-var-members}
+\doxysubsection{Variable Documentation}
+\index{weAreAllinThisTogetherrr.cpp@{weAreAllinThisTogetherrr.cpp}!currentFreq@{currentFreq}}
+\index{currentFreq@{currentFreq}!weAreAllinThisTogetherrr.cpp@{weAreAllinThisTogetherrr.cpp}}
+\doxysubsubsection{currentFreq}
+{\footnotesize\ttfamily \label{we_are_allin_this_togetherrr_8cpp_af77c60f8a0a784e821568b380d0cf7ff_af77c60f8a0a784e821568b380d0cf7ff} 
+float current\+Freq = 923.\+0}
+
+
+
+Definition at line \textbf{ 20} of file \textbf{ we\+Are\+Allin\+This\+Togetherrr.\+cpp}.
+
+
+
+Referenced by \textbf{ setup()}.
+
+\index{weAreAllinThisTogetherrr.cpp@{weAreAllinThisTogetherrr.cpp}!day@{day}}
+\index{day@{day}!weAreAllinThisTogetherrr.cpp@{weAreAllinThisTogetherrr.cpp}}
+\doxysubsubsection{day}
+{\footnotesize\ttfamily \label{we_are_allin_this_togetherrr_8cpp_a4c11afc03fc3ee49bab660def6558f2a_a4c11afc03fc3ee49bab660def6558f2a} 
+int day}
+
+
+
+Definition at line \textbf{ 53} of file \textbf{ we\+Are\+Allin\+This\+Togetherrr.\+cpp}.
+
+
+
+Referenced by \textbf{ loop()}, and \textbf{ Predict()}.
+
+\index{weAreAllinThisTogetherrr.cpp@{weAreAllinThisTogetherrr.cpp}!GPS@{GPS}}
+\index{GPS@{GPS}!weAreAllinThisTogetherrr.cpp@{weAreAllinThisTogetherrr.cpp}}
+\doxysubsubsection{GPS}
+{\footnotesize\ttfamily \label{we_are_allin_this_togetherrr_8cpp_af599e1dd1a7fba187c3cc26b8df8c792_af599e1dd1a7fba187c3cc26b8df8c792} 
+Air530\+ZClass GPS}
+
+
+
+Definition at line \textbf{ 18} of file \textbf{ we\+Are\+Allin\+This\+Togetherrr.\+cpp}.
+
+
+
+Referenced by \textbf{ setup()}.
+
+\index{weAreAllinThisTogetherrr.cpp@{weAreAllinThisTogetherrr.cpp}!hr@{hr}}
+\index{hr@{hr}!weAreAllinThisTogetherrr.cpp@{weAreAllinThisTogetherrr.cpp}}
+\doxysubsubsection{hr}
+{\footnotesize\ttfamily \label{we_are_allin_this_togetherrr_8cpp_aef06c4330a73eadf7917280bfcc438db_aef06c4330a73eadf7917280bfcc438db} 
+int hr}
+
+
+
+Definition at line \textbf{ 53} of file \textbf{ we\+Are\+Allin\+This\+Togetherrr.\+cpp}.
+
+
+
+Referenced by \textbf{ loop()}, and \textbf{ Predict()}.
+
+\index{weAreAllinThisTogetherrr.cpp@{weAreAllinThisTogetherrr.cpp}!lrfhssSyncWord@{lrfhssSyncWord}}
+\index{lrfhssSyncWord@{lrfhssSyncWord}!weAreAllinThisTogetherrr.cpp@{weAreAllinThisTogetherrr.cpp}}
+\doxysubsubsection{lrfhssSyncWord}
+{\footnotesize\ttfamily \label{we_are_allin_this_togetherrr_8cpp_a0a16061a5ea65099ffb7baa813263d90_a0a16061a5ea65099ffb7baa813263d90} 
+uint8\+\_\+t lrfhss\+Sync\+Word[4] = \{0x2C, 0x0F, 0x79, 0x95\}}
+
+
+
+Change syncword like you change password for different websites -\/ TH. 
+
+
+
+Definition at line \textbf{ 24} of file \textbf{ we\+Are\+Allin\+This\+Togetherrr.\+cpp}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00024\ \{0x2C,\ 0x0F,\ 0x79,\ 0x95\};}
+
+\end{DoxyCode}
+\index{weAreAllinThisTogetherrr.cpp@{weAreAllinThisTogetherrr.cpp}!minute@{minute}}
+\index{minute@{minute}!weAreAllinThisTogetherrr.cpp@{weAreAllinThisTogetherrr.cpp}}
+\doxysubsubsection{minute}
+{\footnotesize\ttfamily \label{we_are_allin_this_togetherrr_8cpp_a5edffad982a0566ad01d95005474eae3_a5edffad982a0566ad01d95005474eae3} 
+int minute}
+
+
+
+Definition at line \textbf{ 53} of file \textbf{ we\+Are\+Allin\+This\+Togetherrr.\+cpp}.
+
+
+
+Referenced by \textbf{ loop()}, and \textbf{ Predict()}.
+
+\index{weAreAllinThisTogetherrr.cpp@{weAreAllinThisTogetherrr.cpp}!mon@{mon}}
+\index{mon@{mon}!weAreAllinThisTogetherrr.cpp@{weAreAllinThisTogetherrr.cpp}}
+\doxysubsubsection{mon}
+{\footnotesize\ttfamily \label{we_are_allin_this_togetherrr_8cpp_a25b602fa15f03b01f61a900f1f68a67d_a25b602fa15f03b01f61a900f1f68a67d} 
+int mon}
+
+
+
+Definition at line \textbf{ 53} of file \textbf{ we\+Are\+Allin\+This\+Togetherrr.\+cpp}.
+
+
+
+Referenced by \textbf{ loop()}, and \textbf{ Predict()}.
+
+\index{weAreAllinThisTogetherrr.cpp@{weAreAllinThisTogetherrr.cpp}!operationDone@{operationDone}}
+\index{operationDone@{operationDone}!weAreAllinThisTogetherrr.cpp@{weAreAllinThisTogetherrr.cpp}}
+\doxysubsubsection{operationDone}
+{\footnotesize\ttfamily \label{we_are_allin_this_togetherrr_8cpp_a53896c79caaa5baeab6a96ab3365dcaf_a53896c79caaa5baeab6a96ab3365dcaf} 
+volatile bool operation\+Done = false}
+
+
+
+flag to indicate that a packet was sent or received. It is adivisable not to tamper with thie boolean as it is needed for radio interfaces. 
+
+
+
+Definition at line \textbf{ 29} of file \textbf{ we\+Are\+Allin\+This\+Togetherrr.\+cpp}.
+
+
+
+Referenced by \textbf{ set\+Flag()}.
+
+\index{weAreAllinThisTogetherrr.cpp@{weAreAllinThisTogetherrr.cpp}!radio@{radio}}
+\index{radio@{radio}!weAreAllinThisTogetherrr.cpp@{weAreAllinThisTogetherrr.cpp}}
+\doxysubsubsection{radio}
+{\footnotesize\ttfamily \label{we_are_allin_this_togetherrr_8cpp_a324ee0ba2e9626c90200f6128ee8ca5a_a324ee0ba2e9626c90200f6128ee8ca5a} 
+Radio radio = new Radio\+Module()}
+
+
+
+Definition at line \textbf{ 10} of file \textbf{ we\+Are\+Allin\+This\+Togetherrr.\+cpp}.
+
+
+
+Referenced by \textbf{ setup()}.
+
+\index{weAreAllinThisTogetherrr.cpp@{weAreAllinThisTogetherrr.cpp}!receivedFlag@{receivedFlag}}
+\index{receivedFlag@{receivedFlag}!weAreAllinThisTogetherrr.cpp@{weAreAllinThisTogetherrr.cpp}}
+\doxysubsubsection{receivedFlag}
+{\footnotesize\ttfamily \label{we_are_allin_this_togetherrr_8cpp_af600e4d6069e8530b1605a6e5e1b230c_af600e4d6069e8530b1605a6e5e1b230c} 
+volatile bool received\+Flag = false}
+
+
+
+flag to indicate that a packet was received. Also do not tamper. 
+
+
+
+Definition at line \textbf{ 31} of file \textbf{ we\+Are\+Allin\+This\+Togetherrr.\+cpp}.
+
+
+
+Referenced by \textbf{ set\+Flag()}.
+
+\index{weAreAllinThisTogetherrr.cpp@{weAreAllinThisTogetherrr.cpp}!sat@{sat}}
+\index{sat@{sat}!weAreAllinThisTogetherrr.cpp@{weAreAllinThisTogetherrr.cpp}}
+\doxysubsubsection{sat}
+{\footnotesize\ttfamily \label{we_are_allin_this_togetherrr_8cpp_a6dc99ec69f66fa0a83b9e00744e529bb_a6dc99ec69f66fa0a83b9e00744e529bb} 
+Sgp4 sat}
+
+
+
+Definition at line \textbf{ 50} of file \textbf{ we\+Are\+Allin\+This\+Togetherrr.\+cpp}.
+
+
+
+Referenced by \textbf{ Predict()}, and \textbf{ setup()}.
+
+\index{weAreAllinThisTogetherrr.cpp@{weAreAllinThisTogetherrr.cpp}!satname@{satname}}
+\index{satname@{satname}!weAreAllinThisTogetherrr.cpp@{weAreAllinThisTogetherrr.cpp}}
+\doxysubsubsection{satname}
+{\footnotesize\ttfamily \label{we_are_allin_this_togetherrr_8cpp_a2f31c0d1fe2ab21da159499436bdf93c_a2f31c0d1fe2ab21da159499436bdf93c} 
+char satname[$\,$] = "{}0 LANDSAT 9"{}}
+
+
+
+Definition at line \textbf{ 14} of file \textbf{ we\+Are\+Allin\+This\+Togetherrr.\+cpp}.
+
+
+
+Referenced by \textbf{ setup()}.
+
+\index{weAreAllinThisTogetherrr.cpp@{weAreAllinThisTogetherrr.cpp}!sec@{sec}}
+\index{sec@{sec}!weAreAllinThisTogetherrr.cpp@{weAreAllinThisTogetherrr.cpp}}
+\doxysubsubsection{sec}
+{\footnotesize\ttfamily \label{we_are_allin_this_togetherrr_8cpp_a741d9964fa8029b9468528756ea835af_a741d9964fa8029b9468528756ea835af} 
+double sec}
+
+
+
+Definition at line \textbf{ 53} of file \textbf{ we\+Are\+Allin\+This\+Togetherrr.\+cpp}.
+
+
+
+Referenced by \textbf{ loop()}, and \textbf{ Predict()}.
+
+\index{weAreAllinThisTogetherrr.cpp@{weAreAllinThisTogetherrr.cpp}!timezone@{timezone}}
+\index{timezone@{timezone}!weAreAllinThisTogetherrr.cpp@{weAreAllinThisTogetherrr.cpp}}
+\doxysubsubsection{timezone}
+{\footnotesize\ttfamily \label{we_are_allin_this_togetherrr_8cpp_ae6098209f65d9f9434e0337620b187c0_ae6098209f65d9f9434e0337620b187c0} 
+int timezone = 7}
+
+
+
+Timezone is off by 1 hour from actual input time because SGP4 library is faster by 1 hour from UTC time for some reason. 
+
+
+
+Definition at line \textbf{ 51} of file \textbf{ we\+Are\+Allin\+This\+Togetherrr.\+cpp}.
+
+
+
+Referenced by \textbf{ loop()}, and \textbf{ Predict()}.
+
+\index{weAreAllinThisTogetherrr.cpp@{weAreAllinThisTogetherrr.cpp}!tle\_line1@{tle\_line1}}
+\index{tle\_line1@{tle\_line1}!weAreAllinThisTogetherrr.cpp@{weAreAllinThisTogetherrr.cpp}}
+\doxysubsubsection{tle\_line1}
+{\footnotesize\ttfamily \label{we_are_allin_this_togetherrr_8cpp_a945a14d3791660176cdfcbef30e3f175_a945a14d3791660176cdfcbef30e3f175} 
+char tle\+\_\+line1[$\,$] = "{}1 49260U 21088A 25287.\+90967571 .\+00000608 00000-\/0 14510-\/3 0 9996"{}}
+
+
+
+Copy and paste Line one from the TLE data. 
+
+
+
+Definition at line \textbf{ 15} of file \textbf{ we\+Are\+Allin\+This\+Togetherrr.\+cpp}.
+
+
+
+Referenced by \textbf{ setup()}.
+
+\index{weAreAllinThisTogetherrr.cpp@{weAreAllinThisTogetherrr.cpp}!tle\_line2@{tle\_line2}}
+\index{tle\_line2@{tle\_line2}!weAreAllinThisTogetherrr.cpp@{weAreAllinThisTogetherrr.cpp}}
+\doxysubsubsection{tle\_line2}
+{\footnotesize\ttfamily \label{we_are_allin_this_togetherrr_8cpp_a6bf87531d342778713c1b5250c09d327_a6bf87531d342778713c1b5250c09d327} 
+char tle\+\_\+line2[$\,$] = "{}2 49260 98.\+2160 356.\+8519 0001329 88.\+4277 271.\+7074 14.\+57108878215282"{}}
+
+
+
+Line two from the TLE data. 
+
+
+
+Definition at line \textbf{ 16} of file \textbf{ we\+Are\+Allin\+This\+Togetherrr.\+cpp}.
+
+
+
+Referenced by \textbf{ setup()}.
+
+\index{weAreAllinThisTogetherrr.cpp@{weAreAllinThisTogetherrr.cpp}!transmissionState@{transmissionState}}
+\index{transmissionState@{transmissionState}!weAreAllinThisTogetherrr.cpp@{weAreAllinThisTogetherrr.cpp}}
+\doxysubsubsection{transmissionState}
+{\footnotesize\ttfamily \label{we_are_allin_this_togetherrr_8cpp_a12e6be2c9c597bd4b486715097191a92_a12e6be2c9c597bd4b486715097191a92} 
+int transmission\+State = RADIOLIB\+\_\+\+ERR\+\_\+\+NONE}
+
+
+
+Definition at line \textbf{ 22} of file \textbf{ we\+Are\+Allin\+This\+Togetherrr.\+cpp}.
+
+\index{weAreAllinThisTogetherrr.cpp@{weAreAllinThisTogetherrr.cpp}!transmitFlag@{transmitFlag}}
+\index{transmitFlag@{transmitFlag}!weAreAllinThisTogetherrr.cpp@{weAreAllinThisTogetherrr.cpp}}
+\doxysubsubsection{transmitFlag}
+{\footnotesize\ttfamily \label{we_are_allin_this_togetherrr_8cpp_a5ed86468bad117da8f6e2b20b563be5b_a5ed86468bad117da8f6e2b20b563be5b} 
+bool transmit\+Flag = false}
+
+
+
+flag to indicate transmission or reception state. It is advisable to not change this variable directly outside the interrupt context. 
+
+
+
+Definition at line \textbf{ 27} of file \textbf{ we\+Are\+Allin\+This\+Togetherrr.\+cpp}.
+
+\index{weAreAllinThisTogetherrr.cpp@{weAreAllinThisTogetherrr.cpp}!unixtime@{unixtime}}
+\index{unixtime@{unixtime}!weAreAllinThisTogetherrr.cpp@{weAreAllinThisTogetherrr.cpp}}
+\doxysubsubsection{unixtime}
+{\footnotesize\ttfamily \label{we_are_allin_this_togetherrr_8cpp_a0af10db85c0c84f862641204837164f6_a0af10db85c0c84f862641204837164f6} 
+unsigned long unixtime = 1760486400}
+
+
+
+\doxyref{Predict()}{p.}{d0/de3/we_are_allin_this_togetherrr_8cpp_af56b9618b13afcb230938d55a2f37e59_af56b9618b13afcb230938d55a2f37e59} function returns predicted times for overpasses of satellite from TLE in the timezone set. 
+
+Predict requires the number of overpasses desired as an argument, and will return the times that the satellite will perform an overpass over the coordinates and altitude of the object where the site() function was set earlier in the program. The times are returned in the timezone set in the timezone variable. The elevation is set to a minimum of 10º above the horizon, but you can change it manually if you so desire, but 10º is already quite reasonable and follows the standard on Celeste\+Trak. This is the time by which the program starts looking for overpasses. Update this to the unixtime that you would like to start obsrving from. TODO\+: interface with the air530z GPS module to get current time. 
+
+Definition at line \textbf{ 60} of file \textbf{ we\+Are\+Allin\+This\+Togetherrr.\+cpp}.
+
+
+
+Referenced by \textbf{ Predict()}.
+
+\index{weAreAllinThisTogetherrr.cpp@{weAreAllinThisTogetherrr.cpp}!year@{year}}
+\index{year@{year}!weAreAllinThisTogetherrr.cpp@{weAreAllinThisTogetherrr.cpp}}
+\doxysubsubsection{year}
+{\footnotesize\ttfamily \label{we_are_allin_this_togetherrr_8cpp_abeac221e38b7b9ce7df8722c842bf671_abeac221e38b7b9ce7df8722c842bf671} 
+int year}
+
+
+
+Definition at line \textbf{ 53} of file \textbf{ we\+Are\+Allin\+This\+Togetherrr.\+cpp}.
+
+
+
+Referenced by \textbf{ loop()}, and \textbf{ Predict()}.
+
