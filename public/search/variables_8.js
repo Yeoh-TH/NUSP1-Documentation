@@ -1,6 +1,7 @@
 var searchData=
 [
-  ['sat_0',['sat',['../d0/de3/we_are_allin_this_togetherrr_8cpp_a6dc99ec69f66fa0a83b9e00744e529bb.html#a6dc99ec69f66fa0a83b9e00744e529bb',1,'weAreAllinThisTogetherrr.cpp']]],
-  ['satname_1',['satname',['../d0/de3/we_are_allin_this_togetherrr_8cpp_a2f31c0d1fe2ab21da159499436bdf93c.html#a2f31c0d1fe2ab21da159499436bdf93c',1,'weAreAllinThisTogetherrr.cpp']]],
-  ['sec_2',['sec',['../d0/de3/we_are_allin_this_togetherrr_8cpp_a741d9964fa8029b9468528756ea835af.html#a741d9964fa8029b9468528756ea835af',1,'weAreAllinThisTogetherrr.cpp']]]
+  ['timetillsleep_0',['timetillsleep',['../_p_i_g_s_8cpp.html#a0b9825a64bd2e664c57a9e82445cbc2d',1,'PIGS.cpp']]],
+  ['timezone_1',['timezone',['../_p_i_g_s_8cpp.html#ae6098209f65d9f9434e0337620b187c0',1,'PIGS.cpp']]],
+  ['tle_5fline1_2',['tle_line1',['../_p_i_g_s_8cpp.html#a945a14d3791660176cdfcbef30e3f175',1,'PIGS.cpp']]],
+  ['tle_5fline2_3',['tle_line2',['../_p_i_g_s_8cpp.html#a6bf87531d342778713c1b5250c09d327',1,'PIGS.cpp']]]
 ];
