@@ -24,13 +24,15 @@
 */
 var NAVTREE =
 [
-  [ "Pretty Integrated Ground Station", "index.html", [
+  [ "Pretty Integrated Ground Station V2", "index.html", [
     [ "Files", "files.html", [
       [ "File List", "files.html", "files_dup" ],
       [ "File Members", "globals.html", [
         [ "All", "globals.html", null ],
         [ "Functions", "globals_func.html", null ],
         [ "Variables", "globals_vars.html", null ],
+        [ "Enumerations", "globals_enum.html", null ],
+        [ "Enumerator", "globals_eval.html", null ],
         [ "Macros", "globals_defs.html", null ]
       ] ]
     ] ]
@@ -39,7 +41,7 @@ var NAVTREE =
 
 var NAVTREEINDEX =
 [
-"d0/de3/we_are_allin_this_togetherrr_8cpp.html"
+"_p_i_g_s_8cpp.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronization';
