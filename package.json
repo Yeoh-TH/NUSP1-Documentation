@@ -4,11 +4,12 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
+    "organize": "node scripts/organize-docs.js",
+    "dev": "npm run organize && vite",
+    "build": "npm run organize && vite build",
     "preview": "vite preview",
-    "predeploy":"npm run build",
-    "deploy":"gh-pages -d dist"
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist"
   },
   "devDependencies": {
     "vite": "^7.1.7"

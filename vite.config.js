@@ -1,5 +1,17 @@
 import { defineConfig } from "vite";
 
 export default defineConfig({
-    base:'./NUSP1_PIGS'
+    base: process.env.NODE_ENV === 'production' 
+        ? '/NUSP1-Documentation/'
+        : '/',
+    publicDir: 'public',
+    build: {
+        outDir: 'dist',
+        assetsDir: 'assets',
+        rollupOptions: {
+            input: {
+                main: '/index.html',
+            }
+        }
+    }
 })
