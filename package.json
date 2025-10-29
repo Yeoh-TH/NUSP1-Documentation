@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "organize": "node scripts/organize-docs.js && node scripts/fix_paths.js",
-    "build": "npm run organize",
+    "update-base": "node scripts/update_base_paths.js",
+    "build": "npm run organize && npm run update-base",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d docs"
   },
