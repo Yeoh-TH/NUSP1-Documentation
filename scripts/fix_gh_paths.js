@@ -22,9 +22,13 @@ async function moveFiles() {
             const filePath = join(docsDir, file);
             let content = await fs.readFile(filePath, 'utf8');
             
-            // Update paths to be absolute from the root
-            content = content.replace(/href="(?!http|#|\/NUSP1-Documentation)([^"]+)"/g, 'href="/NUSP1-Documentation/$1"');
-            content = content.replace(/src="(?!http|#|\/NUSP1-Documentation)([^"]+)"/g, 'src="/NUSP1-Documentation/$1"');
+            // Update paths to be relative
+            content = content.replace(/href="(?!http|#)([^"]+)"/g, (match, p1) => {
+                return `href="${p1.startsWith('/') ? '.' : ''}${p1}"`;
+            });
+            content = content.replace(/src="(?!http|#)([^"]+)"/g, (match, p1) => {
+                return `src="${p1.startsWith('/') ? '.' : ''}${p1}"`;
+            });
             
             await fs.writeFile(filePath, content);
             console.log(`Updated paths in ${file}`);

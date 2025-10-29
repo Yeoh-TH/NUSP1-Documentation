@@ -4,13 +4,8 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "organize": "node scripts/organize-docs.js && node scripts/fix_paths.js",
-    "clean": "rm -rf dist",
-    "copy": "cp -r docs/* dist/",
-    "fix-paths": "node scripts/fix_gh_paths.js",
-    "build": "npm run clean && mkdir -p dist && npm run organize && npm run copy && npm run fix-paths",
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d dist"
+    "predeploy": "touch public/.nojekyll",
+    "deploy": "gh-pages -d public"
   },
   "devDependencies": {
     "vite": "^7.1.7"

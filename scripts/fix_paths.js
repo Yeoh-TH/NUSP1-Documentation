@@ -19,12 +19,12 @@ async function fixPaths() {
             const filePath = join(docsDir, file);
             let content = await fs.readFile(filePath, 'utf8');
             
-            // Update paths to reflect new directory structure
-            content = content.replace(/href="([^"]*\.css)"/g, 'href="css/$1"');
-            content = content.replace(/src="([^"]*\.js)"/g, 'src="js/$1"');
-            content = content.replace(/href="favicon \(7\)\.ico"/g, 'href="assets/favicon (7).ico"');
-            content = content.replace(/src="logo2\.png"/g, 'src="assets/logo2.png"');
-            content = content.replace(/src="doxygen\.svg"/g, 'src="assets/doxygen.svg"');
+            // Update paths while preserving the directory structure
+            content = content.replace(/href="(?!http|#|\.)([^"]+\.css)"/g, 'href="./css/$1"');
+            content = content.replace(/src="(?!http|#|\.)([^"]+\.js)"/g, 'src="./js/$1"');
+            content = content.replace(/href="favicon \(7\)\.ico"/g, 'href="./assets/favicon (7).ico"');
+            content = content.replace(/src="logo2\.png"/g, 'src="./assets/logo2.png"');
+            content = content.replace(/src="doxygen\.svg"/g, 'src="./assets/doxygen.svg"');
             
             // Special case for search paths that should stay in search/
             content = content.replace(/href="css\/search\/search\.css"/g, 'href="search/search.css"');
