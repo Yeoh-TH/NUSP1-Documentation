@@ -5,10 +5,12 @@
   "type": "module",
   "scripts": {
     "organize": "node scripts/organize-docs.js && node scripts/fix_paths.js",
-    "update-base": "node scripts/update_base_paths.js",
-    "build": "npm run organize && npm run update-base",
+    "clean": "rm -rf dist",
+    "copy": "cp -r docs/* dist/",
+    "fix-paths": "node scripts/fix_gh_paths.js",
+    "build": "npm run clean && mkdir -p dist && npm run organize && npm run copy && npm run fix-paths",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d docs"
+    "deploy": "gh-pages -d dist"
   },
   "devDependencies": {
     "vite": "^7.1.7"
