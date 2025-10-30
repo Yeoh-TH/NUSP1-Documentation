@@ -1,4 +1,0 @@
-var files_dup =
-[
-    [ "PIGS.h", "d5/de0/_p_i_g_s_8h.html", "d5/de0/_p_i_g_s_8h" ]
-];
